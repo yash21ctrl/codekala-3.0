@@ -5,6 +5,18 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
 <title>Code Kala 3.0 | Adroit Presents</title>
+<meta name="description" content="Code Kala 3.0 — The Premier National Tech Festival presented by Adroit CCSD. Register now for Algo-X, Pixel Riot, BGMI, Free Fire, Clue Crew, Tech Pitch, and Chaos League."/>
+<meta name="theme-color" content="#ebd7b3"/>
+<!-- OpenGraph / Social Previews -->
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://codekala-30.vercel.app/"/>
+<meta property="og:title" content="Code Kala 3.0 | Adroit Presents"/>
+<meta property="og:description" content="The Premier National Tech Festival. Compete in Algo-X, Pixel Riot, BGMI, Free Fire, Clue Crew, Tech Pitch, and Chaos League!"/>
+<meta property="og:image" content="https://codekala-30.vercel.app/assets/codekala_logo.jpeg"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Code Kala 3.0 | Adroit Presents"/>
+<meta name="twitter:description" content="The Premier National Tech Festival presented by Adroit CCSD."/>
+<meta name="twitter:image" content="https://codekala-30.vercel.app/assets/codekala_logo.jpeg"/>
 <!-- Favicon -->
 <link href="assets/rose_ultra.jpg" rel="icon" type="image/png"/>
 <!-- Google Fonts: Letterpress, Typewriter, Gothic Woodcut, Decorative Script -->
@@ -13,7 +25,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&amp;family=Cinzel+Decorative:wght@700;900&amp;family=Alex+Brush&amp;family=Special+Elite&amp;family=Pirata+One&amp;family=Courier+Prime:ital,wght@0,400;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
 <!-- Fast Resource Preloads -->
 <link as="image" href="initial_frames_opt/frame_001.jpg" rel="preload"/>
-<link href="style.css?v=16.0" rel="stylesheet"/>
+<link as="image" href="assets/events/tech_pitch.jpg?v=15.0" rel="preload"/>
+<link as="image" href="assets/events/pixel_riot.jpg?v=15.0" rel="preload"/>
+<link as="image" href="assets/events/algo_x.jpg?v=15.0" rel="preload"/>
+<link as="image" href="assets/events/free_fire.jpg?v=15.0" rel="preload"/>
+<link as="image" href="assets/events/bgmi.jpg?v=15.0" rel="preload"/>
+<link as="image" href="assets/events/chaos_league.jpg?v=15.0" rel="preload"/>
+<link as="image" href="assets/events/clue_crew.jpg?v=15.0" rel="preload"/>
+<link href="style.css?v=17.0" rel="stylesheet"/>
 <!-- Critical Vintage Theme, Grand Header, Medium-Large Clock & Scroll Down Styles -->
 <style>
     /* ======================================================== */
@@ -286,7 +305,7 @@
     @media (max-width: 768px) {
       /* Mobile Landing "ENTER FESTIVAL" Button: Moved up away from bottom bar */
       .intro-enter-btn {
-        bottom: calc(78px + env(safe-area-inset-bottom, 0px)) !important;
+        bottom: calc(140px + env(safe-area-inset-bottom, 0px)) !important;
         left: 50% !important;
         right: auto !important;
         transform: translateX(-50%) !important;
@@ -500,8 +519,8 @@
 <span class="status-countdown" id="introCountdown">Entering festival...</span>
 </div>
 <!-- Instant Enter / Skip Button -->
-<button class="intro-enter-btn" id="introEnterBtn" title="Enter Festival Directly">
-<span>ENTER FESTIVAL</span>
+<button class="intro-enter-btn" id="introEnterBtn" title="Enter Event Directly">
+<span>ENTER EVENT</span>
 <span class="enter-arrow">➔</span>
 </button>
 <!-- Bottom Torn Paper Transition Edge -->
@@ -643,7 +662,7 @@
 </svg>
 </div>
 <div class="dossier-card-poster-wrap">
-<img alt="TECH PITCH" class="dossier-card-poster" loading="lazy" src="assets/events/tech_pitch.jpg?v=14.0"/>
+<img alt="TECH PITCH" class="dossier-card-poster" fetchpriority="high" src="assets/events/tech_pitch.jpg?v=15.0"/>
 <span class="dossier-poster-seal">OFFICIAL DOSSIER</span>
 </div><div class="dossier-body">
 <h3 class="dossier-event-name">TECH PITCH</h3>
@@ -665,7 +684,7 @@
 </svg>
 </div>
 <div class="dossier-card-poster-wrap">
-<img alt="PIXEL RIOT" class="dossier-card-poster" loading="lazy" src="assets/events/pixel_riot.jpg?v=14.0"/>
+<img alt="PIXEL RIOT" class="dossier-card-poster" fetchpriority="high" src="assets/events/pixel_riot.jpg?v=15.0"/>
 <span class="dossier-poster-seal">OFFICIAL DOSSIER</span>
 </div><div class="dossier-body">
 <h3 class="dossier-event-name">PIXEL RIOT</h3>
@@ -687,7 +706,7 @@
 </svg>
 </div>
 <div class="dossier-card-poster-wrap">
-<img alt="ALGO X" class="dossier-card-poster" loading="lazy" src="assets/events/algo_x.jpg?v=14.0"/>
+<img alt="ALGO X" class="dossier-card-poster" fetchpriority="high" src="assets/events/algo_x.jpg?v=15.0"/>
 <span class="dossier-poster-seal">OFFICIAL DOSSIER</span>
 </div><div class="dossier-body">
 <h3 class="dossier-event-name">ALGO X</h3>
@@ -729,7 +748,7 @@
 </svg>
 </div>
 <div class="dossier-card-poster-wrap">
-<img alt="FREE FIRE" class="dossier-card-poster" loading="lazy" src="assets/events/free_fire.jpg?v=14.0"/>
+<img alt="FREE FIRE" class="dossier-card-poster" fetchpriority="high" src="assets/events/free_fire.jpg?v=15.0"/>
 <span class="dossier-poster-seal">OFFICIAL DOSSIER</span>
 </div><div class="dossier-body">
 <h3 class="dossier-event-name">FREE FIRE</h3>
@@ -751,7 +770,7 @@
 </svg>
 </div>
 <div class="dossier-card-poster-wrap">
-<img alt="BGMI" class="dossier-card-poster" loading="lazy" src="assets/events/bgmi.jpg?v=14.0"/>
+<img alt="BGMI" class="dossier-card-poster" fetchpriority="high" src="assets/events/bgmi.jpg?v=15.0"/>
 <span class="dossier-poster-seal">OFFICIAL DOSSIER</span>
 </div><div class="dossier-body">
 <h3 class="dossier-event-name">BGMI</h3>
@@ -773,7 +792,7 @@
 </svg>
 </div>
 <div class="dossier-card-poster-wrap">
-<img alt="CHAOS LEAGUE" class="dossier-card-poster" loading="lazy" src="assets/events/chaos_league.jpg?v=14.0"/>
+<img alt="CHAOS LEAGUE" class="dossier-card-poster" fetchpriority="high" src="assets/events/chaos_league.jpg?v=15.0"/>
 <span class="dossier-poster-seal">OFFICIAL DOSSIER</span>
 </div><div class="dossier-body">
 <h3 class="dossier-event-name">CHAOS LEAGUE</h3>
@@ -795,7 +814,7 @@
 </svg>
 </div>
 <div class="dossier-card-poster-wrap">
-<img alt="CLUE CREW" class="dossier-card-poster" loading="lazy" src="assets/events/clue_crew.jpg?v=14.0"/>
+<img alt="CLUE CREW" class="dossier-card-poster" fetchpriority="high" src="assets/events/clue_crew.jpg?v=15.0"/>
 <span class="dossier-poster-seal">OFFICIAL DOSSIER</span>
 </div><div class="dossier-body">
 <h3 class="dossier-event-name">CLUE CREW</h3>

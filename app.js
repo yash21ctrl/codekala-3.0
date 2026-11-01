@@ -312,9 +312,12 @@ function initApplication() {
     // 2. Trigger Slide-Up
     introOverlay.classList.add('slide-up');
 
-    // 2.1 Now that landing video has stopped, start loading idle rose rotation frames smoothly in background
+    // 2.1 Now that user entered, ensure initial frames and start scroll sequence preloading immediately
     if (typeof startInitialFramesPreload === 'function') {
       startInitialFramesPreload();
+    }
+    if (typeof startScrollFramesPreload === 'function') {
+      setTimeout(startScrollFramesPreload, 200);
     }
 
     // 3. Play unrolling whoosh SFX
@@ -399,7 +402,7 @@ function initApplication() {
   const initialImages = new Array(TOTAL_INITIAL_FRAMES);
 
   // Set 2: Scroll Multi-Angle Sequence (211 continuous frames from rose_rotating_frames.zip)
-  const TOTAL_SCROLL_FRAMES = 211;
+  const TOTAL_SCROLL_FRAMES = 239;
   const scrollImages = new Array(TOTAL_SCROLL_FRAMES);
 
   function getInitialFrameSrc(index) {
@@ -502,10 +505,11 @@ function initApplication() {
     setTimeout(loadNextInitialChunk, 80);
   }
 
-  // 3. Priority Keyframe-First Preload for Scroll Sequence (Anchor every 10th frame first!)
+  // 3. Priority Keyframe-First Preload for Scroll Sequence (Anchor every 4th frame first for instant 60fps coverage!)
   function preloadScrollFrames() {
+    // Stage 1: Load every 4th frame (60 frames total covering the entire 360° scrub with zero lag)
     const keyframes = [];
-    for (let k = 1; k <= TOTAL_SCROLL_FRAMES; k += 10) {
+    for (let k = 1; k <= TOTAL_SCROLL_FRAMES; k += 4) {
       keyframes.push(k);
     }
     if (keyframes[keyframes.length - 1] !== TOTAL_SCROLL_FRAMES) {
@@ -515,39 +519,50 @@ function initApplication() {
     let kIdx = 0;
     function loadKeyframes() {
       if (kIdx >= keyframes.length) {
-        setTimeout(loadRemainingScrollFrames, 120);
+        setTimeout(loadRemainingScrollFrames, 100);
         return;
       }
-      const chunk = keyframes.slice(kIdx, kIdx + 3);
+      const chunk = keyframes.slice(kIdx, kIdx + 4);
       chunk.forEach(fNum => {
-        if (!scrollImages[fNum - 1]) {
+        if (!scrollImages[fNum - 1] && !loadingScrollFrames.has(fNum)) {
+          loadingScrollFrames.add(fNum);
           const img = new Image();
           img.src = getScrollFrameSrc(fNum);
           img.onload = () => {
             scrollImages[fNum - 1] = img;
+            loadingScrollFrames.delete(fNum);
+          };
+          img.onerror = () => {
+            loadingScrollFrames.delete(fNum);
           };
         }
       });
       kIdx += chunk.length;
-      setTimeout(loadKeyframes, 50);
+      setTimeout(loadKeyframes, 35);
     }
-    setTimeout(loadKeyframes, 200);
+    loadKeyframes();
 
+    // Stage 2: Fill in the remaining in-between frames smoothly
     let fillIdx = 1;
     function loadRemainingScrollFrames() {
       if (fillIdx > TOTAL_SCROLL_FRAMES) return;
-      const end = Math.min(TOTAL_SCROLL_FRAMES, fillIdx + 3);
+      const end = Math.min(TOTAL_SCROLL_FRAMES, fillIdx + 4);
       for (let i = fillIdx; i <= end; i++) {
-        if (!scrollImages[i - 1]) {
+        if (!scrollImages[i - 1] && !loadingScrollFrames.has(i)) {
+          loadingScrollFrames.add(i);
           const img = new Image();
           img.src = getScrollFrameSrc(i);
           img.onload = () => {
             scrollImages[i - 1] = img;
+            loadingScrollFrames.delete(i);
+          };
+          img.onerror = () => {
+            loadingScrollFrames.delete(i);
           };
         }
       }
       fillIdx = end + 1;
-      setTimeout(loadRemainingScrollFrames, 45);
+      setTimeout(loadRemainingScrollFrames, 35);
     }
   }
 
@@ -608,6 +623,8 @@ function initApplication() {
 
   let currentScrollIndex = 1;
 
+  const loadingScrollFrames = new Set();
+
   function renderCurrentState() {
     if (isIdleRotating) {
       const img = getBestAvailableInitialFrame(idleFrame);
@@ -615,15 +632,20 @@ function initApplication() {
     } else {
       const idx = Math.min(TOTAL_SCROLL_FRAMES, Math.max(1, Math.round(currentScrollIndex)));
       
-      // On-demand scrub priority: if current scrub frame is not yet loaded, fetch immediately
-      if (!scrollImages[idx - 1]) {
+      // On-demand scrub priority with strict deduplication: NEVER fire multiple requests for the same frame
+      if (!scrollImages[idx - 1] && !loadingScrollFrames.has(idx)) {
+        loadingScrollFrames.add(idx);
         const reqImg = new Image();
         reqImg.src = getScrollFrameSrc(idx);
         reqImg.onload = () => {
           scrollImages[idx - 1] = reqImg;
+          loadingScrollFrames.delete(idx);
           if (Math.round(currentScrollIndex) === idx) {
             drawImageProp(reqImg);
           }
+        };
+        reqImg.onerror = () => {
+          loadingScrollFrames.delete(idx);
         };
       }
 
@@ -709,7 +731,7 @@ function initApplication() {
     };
   }
 
-  // Deferred Preload State
+  // Proactive Background Preload State
   let initialPreloadStarted = false;
   let scrollPreloadStarted = false;
 
@@ -725,9 +747,35 @@ function initApplication() {
     preloadScrollFrames();
   }
 
-  // Only trigger scroll frame downloading when user actually scrolls!
+  // Preload all 7 event posters and idle frames immediately in background while user watches video!
+  function preloadCoreMediaEarly() {
+    const posters = [
+      'assets/events/tech_pitch.jpg?v=15.0',
+      'assets/events/pixel_riot.jpg?v=15.0',
+      'assets/events/algo_x.jpg?v=15.0',
+      'assets/events/free_fire.jpg?v=15.0',
+      'assets/events/bgmi.jpg?v=15.0',
+      'assets/events/chaos_league.jpg?v=15.0',
+      'assets/events/clue_crew.jpg?v=15.0'
+    ];
+    posters.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+
+    // Start loading initial 360 rotation frames so they are 100% ready when user enters!
+    setTimeout(startInitialFramesPreload, 300);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', preloadCoreMediaEarly);
+  } else {
+    preloadCoreMediaEarly();
+  }
+
+  // Start preloading scroll frames when user enters or begins scrolling
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 40 && !scrollPreloadStarted) {
+    if (window.scrollY > 20 && !scrollPreloadStarted) {
       startScrollFramesPreload();
     }
   }, { passive: true });
@@ -783,7 +831,7 @@ function initApplication() {
     'algo-x': {
       title: 'ALGO X',
       track: 'TECHNICAL ARENA // TRACK 03',
-      image: 'assets/events/algo_x.jpg',
+      image: 'assets/events/algo_x.jpg?v=15.0',
       registerUrl: REGISTER_FORM_URL,
       description: `AlgoX is an algorithm optimization hackathon where logic meets code. Participants are challenged to design smart, efficient algorithms that solve a complex real-world style problem and squeeze out the best possible result. Across a fast-paced, time-bound round, teams must analyze the problem, choose and refine their approach, optimize their solution, and prove their problem-solving skills under pressure.
 
@@ -793,7 +841,7 @@ The best algorithm doesn’t just work, it wins. Solutions are scored automatica
     'free-fire': {
       title: 'FREE FIRE',
       track: 'NON-TECHNICAL CONCLAVE // TRACK 01',
-      image: 'assets/events/free_fire.jpg',
+      image: 'assets/events/free_fire.jpg?v=15.0',
       registerUrl: REGISTER_FORM_URL,
       description: '',
       rules: `FREE FIRE TOURNAMENT: MAIN RULES
@@ -808,7 +856,7 @@ The best algorithm doesn’t just work, it wins. Solutions are scored automatica
     'bgmi': {
       title: 'BGMI',
       track: 'NON-TECHNICAL CONCLAVE // TRACK 02',
-      image: 'assets/events/bgmi.jpg',
+      image: 'assets/events/bgmi.jpg?v=15.0',
       registerUrl: REGISTER_FORM_URL,
       description: '',
       rules: `1. Erangle and livik matchs.
@@ -820,7 +868,7 @@ The best algorithm doesn’t just work, it wins. Solutions are scored automatica
     'pubg': {
       title: 'BGMI',
       track: 'NON-TECHNICAL CONCLAVE // TRACK 02',
-      image: 'assets/events/bgmi.jpg',
+      image: 'assets/events/bgmi.jpg?v=15.0',
       registerUrl: REGISTER_FORM_URL,
       description: '',
       rules: `1. Erangle and livik matchs.

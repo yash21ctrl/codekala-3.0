@@ -1388,7 +1388,7 @@ body {
     z-index: 25 !important;
   }
   .intro-enter-btn {
-    bottom: calc(78px + env(safe-area-inset-bottom, 0px)) !important;
+    bottom: calc(140px + env(safe-area-inset-bottom, 0px)) !important;
     left: 50% !important;
     right: auto !important;
     transform: translateX(-50%) !important;
