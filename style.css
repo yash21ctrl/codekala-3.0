@@ -1,0 +1,2258 @@
+/* ==========================================================================
+   CODE KALA 3.0 — CREASED PARCHMENT & 3D ROTATING ROSE ENGINE
+   Vintage Sepia & Distressed Letterpress Aesthetics
+   ========================================================================== */
+
+:root {
+  --color-parchment-base: #ebd7b3;
+  --color-parchment-light: #f5e6cc;
+  --color-parchment-dark: #caa674;
+  --color-ink-dark: #201105;
+  --color-ink-brown: #45240e;
+  --color-rust-crimson: #842010;
+  --color-blood-red: #9e1c1c;
+  --color-brass-gold: #b58028;
+  --color-brass-light: #f3d489;
+
+  --font-letterpress: 'Cinzel', serif;
+  --font-decorative: 'Cinzel Decorative', cursive, serif;
+  --font-script: 'Alex Brush', cursive;
+  --font-typewriter: 'Special Elite', monospace;
+  --font-gothic: 'Pirata One', cursive;
+  --font-monospace: 'Courier Prime', monospace;
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body, button, a, [role="button"], .small-dossier-card, .music-symbol-btn, .hero-scroll-prompt {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body.modal-open {
+  overflow: hidden;
+  touch-action: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: var(--font-typewriter);
+  color: var(--color-ink-brown);
+  background-color: var(--color-parchment-base);
+  background-image: url('assets/creased_parchment_bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* ==========================================================================
+   1. FULLSCREEN INTRO VIDEO LANDING PAGE & SLIDE TRANSITION
+   ========================================================================== */
+.intro-screen-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10000;
+  background: #0d0804;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.85s cubic-bezier(0.77, 0, 0.175, 1);
+  will-change: transform;
+}
+
+/* Slide-Up Transition into Main Page */
+.intro-screen-overlay.slide-up {
+  transform: translateY(-100%);
+  pointer-events: none;
+}
+
+.intro-video-wrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.intro-video-wrapper video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.1) brightness(0.95);
+}
+
+.intro-grunge-vignette {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at center, transparent 35%, rgba(15, 8, 3, 0.75) 90%),
+    linear-gradient(to bottom, rgba(15, 8, 3, 0.6) 0%, transparent 20%, transparent 70%, rgba(15, 8, 3, 0.85) 100%);
+  pointer-events: none;
+}
+
+/* Subtle Pulse Play Hint (Only displays if browser blocked autoplay) */
+.intro-play-tap-hint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(22, 11, 4, 0.85);
+  border: 1.8px solid #b58028;
+  outline: 1.2px dashed rgba(243, 207, 122, 0.5);
+  outline-offset: -4px;
+  border-radius: 40px;
+  padding: 14px 28px;
+  color: #f7e6c4;
+  font-family: var(--font-decorative, 'Cinzel Decorative', serif);
+  font-size: 12px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 20;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.65);
+  animation: playHintPulse 2s ease-in-out infinite;
+  user-select: none;
+}
+.play-hint-disc {
+  font-size: 24px;
+  color: #f3cf7a;
+  line-height: 1;
+}
+.play-hint-text {
+  font-size: 11px;
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
+}
+@keyframes playHintPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.95; }
+  50% { transform: translate(-50%, -50%) scale(1.06); opacity: 1; box-shadow: 0 14px 44px rgba(181, 128, 40, 0.5); }
+}
+
+/* Subtle Small Left Side Entering Indicator Only */
+.intro-left-indicator {
+  position: absolute;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  left: calc(20px + env(safe-area-inset-left, 0px));
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(18, 9, 4, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(243, 207, 122, 0.3);
+  padding: 8px 16px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.indicator-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #f3cf7a;
+  box-shadow: 0 0 8px #f3cf7a;
+  animation: indicatorPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes indicatorPulse {
+  0% { transform: scale(0.85); opacity: 0.5; }
+  50% { transform: scale(1.25); opacity: 1; }
+  100% { transform: scale(0.85); opacity: 0.5; }
+}
+
+/* Instant Enter / Skip Button */
+.intro-enter-btn {
+  position: absolute;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  right: calc(20px + env(safe-area-inset-right, 0px));
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(245, 233, 212, 0.95);
+  border: 1.5px solid #782312;
+  border-radius: 24px;
+  padding: 10px 20px;
+  color: #201105;
+  font-family: var(--font-letterpress, 'Cinzel Decorative', serif);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.intro-enter-btn:hover, .intro-enter-btn:active {
+  transform: scale(1.04);
+  background: #fff8ec;
+  border-color: #9e1c1c;
+}
+.enter-arrow {
+  color: #782312;
+  font-size: 13px;
+}
+
+.status-countdown {
+  font-family: var(--font-monospace);
+  font-size: 12px;
+  font-weight: 700;
+  color: #f3cf7a;
+  letter-spacing: 1px;
+}
+
+.intro-torn-deckle {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 12px;
+  background: repeating-linear-gradient(45deg, #70471f, #70471f 6px, #4a2810 6px, #4a2810 12px);
+  z-index: 12;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.6);
+}
+
+/* ==========================================================================
+   2. MEDIUM WARM SEPIA CREASED PARCHMENT & OVERLAYS
+   ========================================================================== */
+.creased-parchment-backdrop {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: url('assets/creased_parchment_bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.75;
+  filter: contrast(1.08) brightness(1.02) sepia(0.2);
+}
+
+.vintage-halftone-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background-image: radial-gradient(rgba(120, 75, 30, 0.1) 1.2px, transparent 0);
+  background-size: 18px 18px;
+  opacity: 0.35;
+}
+
+.distressed-vignette-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  box-shadow: inset 0 0 120px rgba(65, 30, 10, 0.25);
+}
+
+.corner-stain {
+  display: none !important;
+}
+
+/* ==========================================================================
+   3. FIXED FULLSCREEN 3D ROTATING ROSE CANVAS
+   ========================================================================== */
+.rose-canvas-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 5;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#roseCanvas {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.08) brightness(0.98);
+}
+
+.rose-canvas-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 40%, rgba(35, 18, 5, 0.45) 90%);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   4. GRAND TOP NAVIGATION BAR (PC & TABLET)
+   ========================================================================== */
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 132px;
+  height: calc(132px + env(safe-area-inset-top, 0px));
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-left: max(40px, env(safe-area-inset-left, 0px));
+  padding-right: max(40px, env(safe-area-inset-right, 0px));
+  padding-bottom: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(180deg, rgba(235, 215, 178, 0.98) 0%, rgba(222, 198, 156, 0.94) 85%, rgba(210, 182, 138, 0.8) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 2.2px dashed rgba(112, 71, 31, 0.6);
+  box-shadow: 0 6px 30px rgba(45, 20, 5, 0.25);
+}
+
+/* Left: Official Code Kala Real Logo */
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+.nav-brand:hover {
+  transform: translateY(-1px);
+}
+
+.brand-real-logo-frame {
+  height: 104px;
+  width: 156px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 3px solid #8c4c1e;
+  background: #0d0603;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.48);
+  transition: border-color 0.2s ease;
+  flex-shrink: 0;
+}
+.nav-brand:hover .brand-real-logo-frame {
+  border-color: #782312;
+}
+
+.brand-real-logo {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.brand-text-block {
+  display: flex;
+  flex-direction: column;
+}
+.brand-vintage-title {
+  font-family: var(--font-gothic);
+  font-size: 46px;
+  color: #201005;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 2.8px;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.7);
+}
+.brand-edition-tag {
+  font-family: var(--font-letterpress);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 3.5px;
+  color: #782312;
+  margin-top: 5px;
+  display: block;
+}
+
+/* Center Actions: Music Symbol Toggle & Replay */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Iconic Music Symbol Button (Mute / Unmute Toggle) */
+.music-symbol-btn {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #ecdaba;
+  border: 2px solid #8c5f2d;
+  color: #3d2310;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 4px 14px rgba(0, 0, 0, 0.2);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+}
+.music-symbol-btn:hover {
+  background: #fdf5e6;
+  border-color: #782312;
+  transform: scale(1.06);
+  box-shadow: 0 4px 14px rgba(120, 35, 18, 0.25);
+}
+.music-symbol-btn.active {
+  background: #782312;
+  color: #fce8c3;
+  border-color: #58160a;
+  box-shadow: 0 0 14px rgba(120, 35, 18, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.music-note-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+.svg-music-note {
+  width: 30px;
+  height: 30px;
+  fill: currentColor;
+}
+.music-symbol-btn:hover .svg-music-note {
+  transform: rotate(6deg) scale(1.08);
+}
+
+.music-soundwaves {
+  position: absolute;
+  bottom: 5px;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 8px;
+}
+.music-soundwaves span {
+  width: 2px;
+  height: 3px;
+  background: #fce8c3;
+  border-radius: 1px;
+  transform-origin: bottom;
+  transition: opacity 0.2s ease;
+}
+.music-symbol-btn.active .music-soundwaves span {
+  animation: musicWaveDance 0.8s ease-in-out infinite alternate;
+}
+.music-symbol-btn.active .music-soundwaves span:nth-child(1) { animation-delay: 0.1s; }
+.music-symbol-btn.active .music-soundwaves span:nth-child(2) { animation-delay: 0.35s; }
+.music-symbol-btn.active .music-soundwaves span:nth-child(3) { animation-delay: 0.2s; }
+.music-symbol-btn.active .music-soundwaves span:nth-child(4) { animation-delay: 0.45s; }
+
+@keyframes musicWaveDance {
+  0% { height: 2px; }
+  100% { height: calc(8px * var(--wave-scale, 1)); }
+}
+
+.music-symbol-btn.muted {
+  background: #d8c29d;
+  color: #7a5433;
+  border-color: #a47c4a;
+  opacity: 0.75;
+}
+.music-symbol-btn.muted .music-soundwaves span {
+  height: 2px !important;
+  animation: none;
+  opacity: 0.4;
+}
+
+/* Right: Official Adroit Picture + "PRESENTS" in Unique Font */
+.header-adroit-presenter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.adroit-photo-frame {
+  height: 100px;
+  width: 170px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 3px solid #8c4c1e;
+  background: #0d0603;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.48);
+  flex-shrink: 0;
+}
+.adroit-header-pic {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  display: block;
+}
+.presents-text-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.presents-unique-text {
+  font-family: var(--font-decorative);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 3.5px;
+  color: #782312;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+/* ==========================================================================
+   5. SCROLLABLE STAGE (SCROLLYTELLING CONTAINER)
+   ========================================================================== */
+.scroll-stage {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  min-height: 380vh; /* Smooth, expansive distance to scrub through all 239 frames */
+  display: flex;
+  flex-direction: column;
+}
+
+.stage-section {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 24px 60px;
+}
+
+/* 1. Hero Initial Section: Countdown Timer & Thematic SCROLL DOWN */
+.section-hero {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: calc(36px + env(safe-area-inset-bottom, 0px));
+  position: relative;
+  pointer-events: none;
+}
+
+.hero-overlay-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  pointer-events: auto;
+  z-index: 20;
+  max-width: 90vw;
+}
+
+/* ==========================================================================
+   1. VINTAGE RECTANGULAR CLOCK TIMER (STRICTLY FLANKED BESIDE THE ROSE)
+   ========================================================================== */
+.vintage-clock-timer {
+  position: absolute;
+  top: 50%;
+  left: clamp(24px, 4.5vw, 75px);
+  transform: translateY(-50%);
+  width: clamp(320px, 25vw, 365px);
+  background: rgba(246, 234, 214, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.8px solid rgba(138, 75, 23, 0.75);
+  outline: 1.5px dashed rgba(181, 128, 40, 0.7);
+  outline-offset: -5px;
+  border-radius: 10px;
+  padding: 16px 20px 14px;
+  box-shadow: 
+    0 16px 48px rgba(35, 17, 6, 0.36),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 0 16px rgba(138, 75, 23, 0.14);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: auto;
+  z-index: 25;
+  user-select: none;
+  box-sizing: border-box;
+  transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.3s ease;
+}
+
+.vintage-clock-timer:hover {
+  transform: translateY(calc(-50% - 2px));
+  box-shadow: 
+    0 20px 54px rgba(35, 17, 6, 0.44),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 0 18px rgba(138, 75, 23, 0.18);
+}
+
+/* Corner Brass Rivets */
+.clock-rivet {
+  position: absolute;
+  font-size: 8px;
+  color: #b58028;
+  opacity: 0.9;
+  pointer-events: none;
+  line-height: 1;
+}
+.clock-rivet.tl { top: 8px; left: 9px; }
+.clock-rivet.tr { top: 8px; right: 9px; }
+.clock-rivet.bl { bottom: 8px; left: 9px; }
+.clock-rivet.br { bottom: 8px; right: 9px; }
+
+/* Clock Plaque Header */
+.clock-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  line-height: 1;
+}
+.clock-flourish {
+  color: #b58028;
+  font-size: 9px;
+}
+.clock-badge-text {
+  font-family: var(--font-letterpress, 'Cinzel Decorative', serif);
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 2.2px;
+  color: #782312;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.clock-title-tag {
+  font-family: var(--font-monospace, 'Courier Prime', monospace);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #8c531b;
+  text-transform: uppercase;
+  margin: 4px 0 11px;
+  line-height: 1;
+}
+
+/* Clock Display Grid: 00 : 00 : 00 : 00 */
+.clock-display-grid {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.clock-time-cell {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(236, 218, 184, 0.96);
+  border: 1.2px solid rgba(138, 75, 23, 0.5);
+  border-radius: 7px;
+  padding: 10px 5px 8px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12), 0 2px 5px rgba(0, 0, 0, 0.08);
+  min-width: 58px;
+  box-sizing: border-box;
+}
+
+.clock-digit {
+  font-family: var(--font-letterpress, 'Cinzel Decorative', serif);
+  font-size: 32px;
+  font-weight: 900;
+  color: #1a0c03;
+  line-height: 1;
+  letter-spacing: 0.5px;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.clock-unit-label {
+  font-family: var(--font-monospace, 'Courier Prime', monospace);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  color: #782312;
+  text-transform: uppercase;
+  margin-top: 4px;
+  line-height: 1;
+}
+
+.clock-colon {
+  font-family: var(--font-letterpress, 'Cinzel Decorative', serif);
+  font-size: 26px;
+  font-weight: 900;
+  color: #782312;
+  margin-bottom: 9px;
+  line-height: 1;
+  user-select: none;
+  animation: clockColonBlink 1.6s ease-in-out infinite;
+}
+@keyframes clockColonBlink {
+  0%, 100% { opacity: 0.95; }
+  50% { opacity: 0.25; }
+}
+
+.clock-footer-tag {
+  font-family: var(--font-monospace, 'Courier Prime', monospace);
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: #5a2e10;
+  opacity: 0.85;
+  margin-top: 8px;
+  line-height: 1;
+}
+
+/* Thematic SCROLL DOWN Cue in Theme Font (Pinned Bottom Center Under Rose) */
+.hero-scroll-prompt {
+  position: absolute;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  background: rgba(246, 236, 218, 0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1.8px dashed #782312;
+  padding: 9px 28px;
+  border-radius: 40px;
+  box-shadow: 0 10px 28px rgba(35, 17, 6, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  z-index: 35;
+  pointer-events: auto;
+  user-select: none;
+  transition: all 0.25s ease;
+  animation: scrollPromptBob 2.4s ease-in-out infinite;
+}
+.hero-scroll-prompt:hover {
+  background: #fdf6ea;
+  border-color: #9e1c1c;
+  transform: translateX(-50%) translateY(-3px) scale(1.03);
+  box-shadow: 0 14px 32px rgba(120, 35, 18, 0.35);
+}
+
+.scroll-theme-text {
+  font-family: var(--font-gothic), 'Pirata One', cursive;
+  font-size: 21px;
+  font-weight: 700;
+  color: #381a07;
+  letter-spacing: 2.5px;
+  line-height: 1;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.scroll-compass-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #782312;
+}
+.scroll-compass-svg {
+  width: 18px;
+  height: 18px;
+  stroke: #782312;
+}
+
+@keyframes scrollPromptBob {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+    box-shadow: 0 8px 24px rgba(25, 12, 4, 0.22);
+  }
+  50% {
+    transform: translateX(-50%) translateY(7px);
+    box-shadow: 0 14px 30px rgba(120, 35, 18, 0.32);
+  }
+}
+
+/* 2. Events Sections (Technical & Non-Technical) */
+.section-events {
+  min-height: 110vh;
+  padding: 90px 32px 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.events-container {
+  width: 100%;
+  max-width: 1240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 45px;
+}
+
+/* Medium Sepia Section Headers */
+.events-section-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-width: 720px;
+}
+
+.vintage-stamp-badge {
+  font-family: var(--font-typewriter);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  color: #842010;
+  border: 1.5px dashed #842010;
+  background: rgba(132, 32, 16, 0.08);
+  padding: 4px 16px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+.events-section-title {
+  font-family: var(--font-gothic);
+  font-size: 56px;
+  color: #201105;
+  line-height: 1;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 0 rgba(245, 230, 204, 0.9), 3px 3px 0 rgba(132, 32, 16, 0.3);
+}
+
+.vintage-section-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 300px;
+  margin-top: 2px;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, #b58028, transparent);
+}
+
+.divider-seal {
+  font-family: var(--font-letterpress);
+  font-size: 12px;
+  color: #b58028;
+  letter-spacing: 2px;
+}
+
+/* ==========================================================================
+   6. MEDIUM-BIG VINTAGE DOSSIERS (RICH MEDIUM COLOR)
+   ========================================================================== */
+.small-dossiers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 28px;
+  width: 100%;
+  max-width: 1240px;
+}
+
+.small-dossier-card {
+  position: relative;
+  background: #ecd9ba;
+  background-image: 
+    linear-gradient(135deg, rgba(248, 235, 210, 0.85) 0%, rgba(228, 204, 168, 0.7) 100%),
+    url('assets/creased_parchment_bg.jpg');
+  background-size: cover;
+  background-position: center;
+  border: 2px solid #8e5e2e;
+  border-radius: 8px;
+  padding: 22px 24px 18px;
+  box-shadow: 
+    0 12px 30px rgba(60, 30, 10, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 0 25px rgba(130, 85, 40, 0.1);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 220px;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform;
+  touch-action: manipulation;
+}
+
+.small-dossier-card:hover {
+  transform: translateY(-6px);
+  border-color: #842010;
+  box-shadow: 
+    0 18px 38px rgba(132, 32, 16, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 0 30px rgba(181, 128, 40, 0.18);
+}
+
+.small-dossier-card:not(.is-spinning):active {
+  transform: scale(0.97);
+}
+
+/* 360-Degree Single Spin Animation on Press */
+@keyframes dossierSpinOnce {
+  0% {
+    transform: perspective(900px) rotateY(0deg) scale(1);
+  }
+  50% {
+    transform: perspective(900px) rotateY(180deg) scale(1.08);
+    box-shadow: 0 24px 44px rgba(132, 32, 16, 0.32);
+  }
+  100% {
+    transform: perspective(900px) rotateY(360deg) scale(1);
+  }
+}
+
+.small-dossier-card.is-spinning {
+  animation: dossierSpinOnce 0.48s cubic-bezier(0.34, 1.35, 0.64, 1) forwards;
+}
+
+/* Corner Tape Accent */
+.dossier-corner-tape {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 36px;
+  height: 36px;
+  background: rgba(181, 128, 40, 0.3);
+  transform: rotate(45deg);
+  border-bottom: 1.5px dashed rgba(120, 75, 30, 0.5);
+}
+
+/* Header Strip */
+.dossier-header-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.dossier-track-tag {
+  font-family: var(--font-monospace);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #842010;
+}
+
+.dossier-wax-badge {
+  font-family: var(--font-typewriter);
+  font-size: 9.5px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: #842010;
+  border: 1.2px solid #842010;
+  padding: 2px 7px;
+  border-radius: 2px;
+  background: rgba(132, 32, 16, 0.08);
+}
+
+.dossier-mini-pills {
+  display: flex;
+  gap: 5px;
+}
+
+.mini-game-tag {
+  font-family: var(--font-monospace);
+  font-size: 8.5px;
+  font-weight: 900;
+  color: #45240e;
+  background: rgba(181, 128, 40, 0.22);
+  border: 1px solid #b58028;
+  padding: 1.5px 6px;
+  border-radius: 2px;
+}
+
+/* Seal Emblem */
+.dossier-seal-emblem {
+  width: 40px;
+  height: 40px;
+  margin: 6px 0;
+  filter: drop-shadow(0 2px 5px rgba(60, 30, 10, 0.25));
+}
+.dossier-svg { width: 100%; height: 100%; }
+
+/* Dossier Body */
+.dossier-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 4px 0 10px;
+}
+
+.dossier-event-name {
+  font-family: var(--font-gothic);
+  font-size: 34px;
+  color: #201105;
+  line-height: 1.05;
+  letter-spacing: 0.8px;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.dossier-category-sub {
+  font-family: var(--font-letterpress);
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #633c1d;
+  letter-spacing: 1px;
+}
+
+/* Dossier Footer */
+.dossier-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1.5px dashed rgba(142, 94, 46, 0.4);
+  padding-top: 8px;
+}
+
+.dossier-action-cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-monospace);
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #842010;
+  letter-spacing: 1.2px;
+}
+
+.cue-icon-scroll {
+  font-size: 14px;
+}
+
+.dossier-spin-indicator {
+  font-size: 14px;
+  color: #b58028;
+  font-weight: 900;
+  transition: transform 0.3s ease;
+}
+
+.small-dossier-card:hover .dossier-spin-indicator {
+  transform: rotate(180deg);
+  color: #842010;
+}
+
+/* ==========================================================================
+   7. INTERACTIVE ROLLING PARCHMENT SCROLL (THEMED MEDIUM PAPER)
+   ========================================================================== */
+.scroll-modal-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 20000;
+  background: rgba(30, 15, 6, 0.65);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.scroll-modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Rolling Scroll Container with Wooden Rollers */
+.scroll-rolling-container {
+  position: relative;
+  width: 100%;
+  max-width: 650px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: scaleY(0.08) scaleX(0.7);
+  opacity: 0;
+  transition: transform 0.45s cubic-bezier(0.18, 0.89, 0.32, 1.2), opacity 0.3s ease;
+  will-change: transform;
+}
+
+.scroll-modal-overlay.active .scroll-rolling-container {
+  transform: scaleY(1) scaleX(1);
+  opacity: 1;
+}
+
+/* Realistic Wooden Roller Bars at Top & Bottom */
+.scroll-wooden-roller {
+  position: relative;
+  width: 104%;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+  filter: drop-shadow(0 4px 8px rgba(35, 18, 5, 0.45));
+}
+
+.roller-bar {
+  flex: 1;
+  height: 12px;
+  background: linear-gradient(180deg, #6e3d16 0%, #3a1c04 45%, #8f5322 75%, #2a1202 100%);
+  border-radius: 4px;
+  border-top: 1px solid #b58028;
+  border-bottom: 1px solid #1a0a01;
+}
+
+.roller-knob {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #f3d489, #b58028 65%, #5c3b0a 100%);
+  border: 1px solid #ffe8aa;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.45);
+}
+
+.roller-top {
+  margin-bottom: -6px;
+}
+.roller-bottom {
+  margin-top: -6px;
+}
+
+/* Close Wax Seal */
+.scroll-modal-close {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #842010;
+  border: 2px solid #f3d489;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s ease;
+}
+
+.scroll-modal-close:hover {
+  background: #a82010;
+  transform: rotate(90deg) scale(1.1);
+}
+
+/* Soft Medium Light Themed Parchment Paper Sheet */
+.scroll-parchment-sheet {
+  position: relative;
+  width: 100%;
+  background-color: #eedec5;
+  background-image: 
+    linear-gradient(180deg, rgba(248, 236, 216, 0.8) 0%, rgba(234, 214, 185, 0.6) 100%),
+    url('assets/creased_parchment_bg.jpg');
+  background-size: cover;
+  border-left: 2.5px solid #a87640;
+  border-right: 2.5px solid #a87640;
+  box-shadow: 
+    0 18px 50px rgba(35, 18, 5, 0.28),
+    inset 0 0 35px rgba(130, 85, 40, 0.12);
+  padding: 34px 34px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 75vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
+
+/* Ribbon */
+.scroll-adroit-ribbon {
+  align-self: center;
+  background: rgba(132, 32, 16, 0.08);
+  border: 1px dashed #842010;
+  padding: 3px 14px;
+  border-radius: 20px;
+}
+.ribbon-text {
+  font-family: var(--font-letterpress);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #842010;
+}
+
+/* Header */
+.scroll-dossier-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.dossier-track-label {
+  font-family: var(--font-monospace);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #842010;
+}
+
+.dossier-main-title {
+  font-family: var(--font-gothic);
+  font-size: 42px;
+  color: #201105;
+  line-height: 1;
+  letter-spacing: 0.8px;
+}
+
+.dossier-tagline {
+  font-family: var(--font-letterpress);
+  font-size: 12px;
+  font-weight: 800;
+  color: #5c3619;
+  letter-spacing: 1px;
+}
+
+.scroll-dossier-separator {
+  text-align: center;
+  font-family: var(--font-letterpress);
+  color: #b58028;
+  font-size: 11px;
+  letter-spacing: 3px;
+}
+
+/* Blank Structured Dossier Body (Ready for User Information) */
+.scroll-blank-dossier-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.blank-dossier-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.blank-section-title-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.section-bullet {
+  font-size: 10px;
+  color: #842010;
+}
+
+.blank-section-title-bar h5 {
+  font-family: var(--font-letterpress);
+  font-size: 11.5px;
+  font-weight: 900;
+  color: #842010;
+  letter-spacing: 1.5px;
+}
+
+.blank-dossier-box {
+  background: rgba(255, 250, 240, 0.75);
+  border: 1.5px dashed rgba(142, 94, 46, 0.5);
+  border-radius: 4px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.blank-tag {
+  font-family: var(--font-monospace);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #5c3619;
+}
+
+.blank-desc {
+  white-space: pre-line;
+  font-family: var(--font-typewriter);
+  font-size: 12px;
+  color: #523016;
+  line-height: 1.45;
+}
+
+.blank-dossier-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 2px;
+}
+
+.blank-meta-card {
+  background: rgba(255, 250, 240, 0.75);
+  border: 1.5px dashed rgba(142, 94, 46, 0.5);
+  border-radius: 4px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.meta-label {
+  font-family: var(--font-monospace);
+  font-size: 10px;
+  font-weight: 800;
+  color: #842010;
+}
+
+.meta-val {
+  font-family: var(--font-typewriter);
+  font-size: 11.5px;
+  color: #321808;
+}
+
+/* Roll Up Button */
+.scroll-action-bar {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.btn-roll-up {
+  background: #3e2210;
+  border: 1.5px solid #b58028;
+  color: #f3d489;
+  padding: 9px 24px;
+  border-radius: 4px;
+  font-family: var(--font-letterpress);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(60, 30, 10, 0.25);
+}
+
+.btn-roll-up:hover {
+  background: #842010;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   8. RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .small-dossiers-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile Devices & Narrow Viewports (<= 768px or coarse pointer) */
+@media (max-width: 768px), (pointer: coarse) and (max-width: 1024px) {
+  /* Mobile Uncropped Landing Video & Full Visibility */
+  .intro-video-wrapper video {
+    object-fit: contain !important;
+    background: #0d0804;
+  }
+
+  /* Mobile Landing Overlay: Zero Collision, Uncut Button */
+  .intro-left-indicator {
+    top: calc(18px + env(safe-area-inset-top, 0px)) !important;
+    left: 16px !important;
+    bottom: auto !important;
+    padding: 6px 12px !important;
+    font-size: 11px !important;
+    z-index: 25 !important;
+  }
+  .intro-enter-btn {
+    bottom: calc(78px + env(safe-area-inset-bottom, 0px)) !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    width: auto !important;
+    max-width: calc(100vw - 32px) !important;
+    padding: 13px 32px !important;
+    font-size: 13px !important;
+    letter-spacing: 2px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+    border-radius: 30px !important;
+    box-sizing: border-box !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.65), 0 0 20px rgba(243, 207, 122, 0.35) !important;
+    z-index: 30 !important;
+  }
+  .intro-enter-btn:hover, .intro-enter-btn:active {
+    transform: translateX(-50%) scale(1.04) !important;
+  }
+
+  /* Mobile Header with Safe Area Insets & Zero Cutoff */
+  .top-nav { 
+    height: 76px;
+    height: calc(76px + env(safe-area-inset-top, 0px));
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-left: max(8px, env(safe-area-inset-left, 0px));
+    padding-right: max(8px, env(safe-area-inset-right, 0px));
+    padding-bottom: 0;
+    gap: 6px;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+  }
+
+  /* Left: Prominent Code Kala Logo Frame (44x62px) + title */
+  .nav-brand {
+    gap: 6px;
+    flex-shrink: 1;
+    min-width: 0;
+  }
+  .brand-real-logo-frame {
+    height: 44px;
+    width: 62px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    border: 1.8px solid #8c4c1e;
+    background: #180c05;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.28);
+  }
+  .brand-real-logo {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .brand-text-block {
+    flex-shrink: 1;
+    min-width: 0;
+  }
+  .brand-vintage-title {
+    font-size: clamp(14px, 3.8vw, 17px);
+    white-space: nowrap;
+    letter-spacing: 0.8px;
+    line-height: 1;
+    font-weight: 900;
+  }
+  .brand-edition-tag {
+    display: block;
+    font-family: var(--font-letterpress);
+    font-size: 7.5px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    color: #782312;
+    margin-top: 2px;
+  }
+
+  /* Center: Tactile 36px music symbol button */
+  .nav-actions {
+    flex-shrink: 0;
+  }
+  .music-symbol-btn {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+    position: relative;
+    touch-action: manipulation;
+  }
+  .music-symbol-btn::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    bottom: -1px;
+    left: -1px;
+    right: -1px;
+    border-radius: 50%;
+  }
+
+  /* Right: Adroit photo frame + "PRESENTS" cleanly stacked (100% visible, NEVER cut off) */
+  .header-adroit-presenter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+  .adroit-photo-frame {
+    height: 34px;
+    width: 58px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    border: 1.8px solid #8c4c1e;
+    background: #100803;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.28);
+    overflow: hidden;
+  }
+  .adroit-header-pic {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .presents-text-wrap {
+    flex-shrink: 0;
+  }
+  .presents-unique-text {
+    font-family: var(--font-decorative);
+    font-size: 8.5px;
+    font-weight: 800;
+    letter-spacing: 1.6px;
+    color: #782312;
+    text-transform: uppercase;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  /* Hero Stage & Fluid Vintage Countdown Timer (Strictly Flanked / Zero Overflow) */
+  .section-hero {
+    min-height: 100vh;
+    min-height: 100dvh;
+    justify-content: space-between;
+    padding-top: calc(80px + env(safe-area-inset-top, 0px));
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .vintage-clock-timer {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    margin: 6px auto 0 !important;
+    width: clamp(305px, 92vw, 355px) !important;
+    max-width: 355px !important;
+    padding: 12px 16px 10px !important;
+    box-sizing: border-box !important;
+  }
+
+  .vintage-clock-timer:hover {
+    transform: none !important;
+  }
+
+  .clock-digit {
+    font-size: clamp(24px, 6.5vw, 28px) !important;
+  }
+
+  .clock-time-cell {
+    min-width: 52px !important;
+    padding: 8px 3px 6px !important;
+  }
+
+  .clock-unit-label {
+    font-size: 7.5px !important;
+  }
+
+  .clock-colon {
+    font-size: 22px !important;
+    margin-bottom: 9px !important;
+  }
+
+  .clock-footer-tag {
+    display: none !important;
+  }
+
+  /* Position "SCROLL DOWN" comfortably above mobile home gesture indicators */
+  .hero-scroll-prompt {
+    position: absolute !important;
+    bottom: calc(18px + env(safe-area-inset-bottom, 0px)) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    padding: 7px 22px !important;
+    pointer-events: auto !important;
+  }
+
+  .scroll-theme-text {
+    font-size: 18px !important;
+    letter-spacing: 2px !important;
+  }
+
+  /* Single-Column Event Dossier Grid for Mobile with 16px Lateral Padding */
+  .section-events {
+    padding: 70px 16px 90px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .events-container {
+    width: 100%;
+    max-width: 100%;
+    gap: 30px;
+  }
+
+  .events-section-title {
+    font-size: clamp(32px, 8.5vw, 44px);
+  }
+
+  .small-dossiers-grid {
+    grid-template-columns: 1fr;
+    width: 100%;
+    max-width: 430px;
+    margin: 0 auto;
+    gap: 18px;
+  }
+
+  .small-dossier-card {
+    min-height: 200px;
+    padding: 18px 20px 16px;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    will-change: transform;
+  }
+
+  .small-dossier-card:not(.is-spinning):active {
+    transform: scale(0.97);
+  }
+
+  .dossier-event-name {
+    font-size: clamp(26px, 6.5vw, 32px);
+  }
+
+  /* Rolling Parchment Modal for Mobile */
+  .scroll-modal-overlay {
+    padding: 12px;
+    padding-top: max(12px, env(safe-area-inset-top, 0px));
+    padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
+    padding-left: max(12px, env(safe-area-inset-left, 0px));
+    padding-right: max(12px, env(safe-area-inset-right, 0px));
+  }
+
+  /* Fluid width (calc(100vw - 24px)) */
+  .scroll-rolling-container {
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+  }
+
+  /* Wooden rollers and brass end-knobs scaled proportionally */
+  .scroll-wooden-roller {
+    width: 102%;
+    height: 16px;
+  }
+
+  .roller-bar {
+    height: 10px;
+  }
+
+  .roller-knob {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* Native momentum scrolling inside the parchment sheet */
+  .scroll-parchment-sheet {
+    max-height: calc(82dvh - 36px);
+    padding: 24px 16px 20px;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    overflow-y: auto;
+    touch-action: pan-y;
+  }
+
+  /* Big, accessible close button (44x44px target) */
+  .scroll-modal-close {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 18px;
+    top: -10px;
+    right: -4px;
+    touch-action: manipulation;
+  }
+
+  /* Accessible bottom roll-up button */
+  .btn-roll-up {
+    width: 100%;
+    max-width: 280px;
+    min-height: 44px;
+    padding: 12px 24px;
+    font-size: 11.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+  }
+
+  .dossier-main-title {
+    font-size: clamp(26px, 7vw, 34px);
+  }
+
+  .blank-dossier-meta-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Explicit class-based overrides when is-mobile-device is stamped on body/html */
+.is-mobile-device .section-events {
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  box-sizing: border-box;
+}
+
+.is-mobile-device .small-dossiers-grid {
+  grid-template-columns: 1fr;
+  max-width: 430px;
+  margin: 0 auto;
+}
+
+.is-mobile-device .small-dossier-card {
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform;
+}
+
+.is-mobile-device .small-dossier-card:not(.is-spinning):active {
+  transform: scale(0.97);
+}
+
+.is-mobile-device .scroll-modal-overlay {
+  padding: 12px;
+  padding-top: max(12px, env(safe-area-inset-top, 0px));
+  padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
+  padding-left: max(12px, env(safe-area-inset-left, 0px));
+  padding-right: max(12px, env(safe-area-inset-right, 0px));
+}
+
+.is-mobile-device .scroll-rolling-container {
+  width: calc(100vw - 24px);
+  max-width: calc(100vw - 24px);
+}
+
+.is-mobile-device .scroll-wooden-roller {
+  width: 102%;
+  height: 16px;
+}
+
+.is-mobile-device .roller-bar {
+  height: 10px;
+}
+
+.is-mobile-device .roller-knob {
+  width: 14px;
+  height: 14px;
+}
+
+.is-mobile-device .scroll-parchment-sheet {
+  max-height: calc(82dvh - 36px);
+  padding: 24px 16px 20px;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.is-mobile-device .scroll-modal-close {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  font-size: 18px;
+  top: -10px;
+  right: -4px;
+}
+
+.is-mobile-device .btn-roll-up {
+  width: 100%;
+  max-width: 280px;
+  min-height: 44px;
+  padding: 12px 24px;
+  font-size: 11.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mobile Orientation Engine: Portrait vs Landscape Cinema Mode */
+.is-mobile-device:not([data-orientation="landscape"]) .section-hero,
+.is-mobile-device[data-orientation="portrait"] .section-hero {
+  justify-content: flex-start;
+  padding-top: calc(75px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+}
+
+.is-mobile-device:not([data-orientation="landscape"]) .vintage-clock-timer,
+.is-mobile-device[data-orientation="portrait"] .vintage-clock-timer {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  margin: 6px auto 0 !important;
+  width: clamp(305px, 92vw, 355px) !important;
+  max-width: 355px !important;
+  padding: 12px 16px 10px !important;
+}
+
+/* Mobile Landscape (Tilted Phone Horizontally -> Edge-to-Edge 16:9 Cinema) */
+.is-mobile-device[data-orientation="landscape"] .section-hero {
+  height: 100vh !important;
+  min-height: 100vh !important;
+  position: relative !important;
+  padding: 0 !important;
+  display: block !important;
+}
+
+.is-mobile-device[data-orientation="landscape"] .vintage-clock-timer {
+  position: absolute !important;
+  top: 52% !important;
+  left: clamp(14px, 3.5vw, 42px) !important;
+  transform: translateY(-50%) scale(0.80) !important;
+  transform-origin: left center !important;
+  width: 275px !important;
+  margin: 0 !important;
+  padding: 9px 12px 8px !important;
+  z-index: 30 !important;
+  box-shadow: 0 10px 30px rgba(35, 17, 6, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+}
+
+.is-mobile-device[data-orientation="landscape"] .small-dossiers-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  max-width: 900px !important;
+  margin: 0 auto !important;
+}
+
+
+/* ==========================================================================
+   EVENT POSTERS & PROMINENT REGISTRATION BUTTONS (CODEKALA / ADROIT)
+   ========================================================================== */
+
+/* Dossier Card Center Poster Container */
+.dossier-card-poster-wrap {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  margin: 10px 0 12px;
+  border-radius: 5px;
+  overflow: hidden;
+  background: #140a04;
+  border: 2px solid #8e5e2e;
+  box-shadow: 
+    0 4px 14px rgba(35, 18, 5, 0.28),
+    inset 0 0 18px rgba(0, 0, 0, 0.45);
+}
+
+.dossier-card-poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  filter: contrast(1.05) saturate(1.08);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.small-dossier-card:hover .dossier-card-poster {
+  transform: scale(1.06);
+  filter: contrast(1.12) saturate(1.15);
+}
+
+/* Vintage Corner Accent */
+.dossier-card-poster-wrap::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  width: 28px;
+  height: 28px;
+  background: rgba(181, 128, 40, 0.45);
+  transform: rotate(-45deg);
+  border-bottom: 1px dashed rgba(80, 45, 15, 0.65);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.dossier-poster-seal {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  font-family: var(--font-monospace);
+  font-size: 8.5px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  color: #fff2d6;
+  background: rgba(132, 32, 16, 0.9);
+  padding: 2.5px 7px;
+  border-radius: 3px;
+  border: 1px solid rgba(243, 212, 137, 0.6);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  z-index: 2;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Dossier Card Footer Actions (Register & Unroll) */
+.dossier-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-top: 1.5px dashed rgba(142, 94, 46, 0.45);
+  padding-top: 11px;
+  margin-top: auto;
+  position: relative;
+  z-index: 5;
+}
+
+.btn-dossier-register {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(180deg, #962512 0%, #6d1a0b 100%);
+  color: #fff5e0;
+  border: 1.5px solid #d4a359;
+  border-radius: 4px;
+  padding: 7px 15px;
+  font-family: var(--font-letterpress);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(132, 32, 16, 0.32);
+  transition: all 0.2s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.btn-dossier-register:hover {
+  background: linear-gradient(180deg, #ba2e17 0%, #871e0c 100%);
+  border-color: #ffe6aa;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 16px rgba(132, 32, 16, 0.5);
+}
+
+.btn-dossier-register:active {
+  transform: translateY(1px) scale(0.97);
+}
+
+.btn-register-seal {
+  color: #fce3a6;
+  font-size: 10.5px;
+}
+
+.dossier-open-cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-monospace);
+  font-size: 10px;
+  font-weight: 800;
+  color: #842010;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.small-dossier-card:hover .dossier-open-cue {
+  color: #a82010;
+}
+
+.dossier-open-cue .dossier-spin-indicator {
+  font-size: 13px;
+  color: #b58028;
+  transition: transform 0.3s ease;
+}
+
+.small-dossier-card:hover .dossier-open-cue .dossier-spin-indicator {
+  transform: rotate(180deg);
+  color: #842010;
+}
+
+/* Modal Hero Poster Showcase (Centered inside Parchment Scroll) */
+.modal-poster-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 6px 0 12px;
+}
+
+.modal-poster-frame {
+  position: relative;
+  width: 100%;
+  max-width: 540px;
+  background: #0d0603;
+  border: 3px solid #8e5e2e;
+  outline: 1.5px solid #d4a359;
+  border-radius: 6px;
+  box-shadow: 
+    0 10px 32px rgba(35, 18, 5, 0.42),
+    inset 0 0 25px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-poster-img {
+  width: 100%;
+  max-height: 310px;
+  object-fit: contain;
+  display: block;
+  background: #110803;
+}
+
+.modal-poster-seal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(132, 32, 16, 0.92);
+  color: #ffeed1;
+  border: 1px solid #d4a359;
+  padding: 3px 9px;
+  font-family: var(--font-letterpress);
+  font-size: 9.5px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+  border-radius: 3px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+/* Grand Register Button inside Parchment Scroll */
+.modal-register-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 4px 0 14px;
+  width: 100%;
+}
+
+.btn-dossier-register-grand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 440px;
+  padding: 13px 28px;
+  background: linear-gradient(180deg, #9e2814 0%, #681809 100%);
+  border: 2px solid #d4a359;
+  box-shadow: 
+    0 6px 22px rgba(132, 32, 16, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  border-radius: 6px;
+  color: #ffffff !important;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.btn-dossier-register-grand:hover {
+  background: linear-gradient(180deg, #ba2f18 0%, #821f0d 100%);
+  border-color: #ffe6aa;
+  box-shadow: 
+    0 9px 28px rgba(132, 32, 16, 0.52),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+  color: #ffffff !important;
+}
+
+.btn-dossier-register-grand:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.register-star {
+  color: #fce3a6;
+  font-size: 15px;
+  animation: pulseStar 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes pulseStar {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  100% { transform: scale(1.2); opacity: 1; }
+}
+
+.register-label {
+  font-family: var(--font-letterpress);
+  font-size: 13.5px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.register-subtext {
+  font-family: var(--font-monospace);
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #6b4321;
+  letter-spacing: 1px;
+  margin-top: 6px;
+  text-align: center;
+}
+
+/* Secondary Bottom Register Button in Scroll Action Bar */
+.scroll-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-action-register {
+  background: linear-gradient(180deg, #962512 0%, #6e1a0b 100%);
+  border: 1.5px solid #d4a359;
+  color: #ffffff !important;
+  padding: 9px 22px;
+  border-radius: 4px;
+  font-family: var(--font-letterpress);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(132, 32, 16, 0.3);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.btn-action-register:hover {
+  background: linear-gradient(180deg, #b82e17 0%, #871e0c 100%);
+  border-color: #ffe6aa;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(132, 32, 16, 0.45);
+  color: #ffffff !important;
+}
+
+.btn-action-register:active {
+  transform: translateY(1px);
+}
+
+/* Registration Toast Notice */
+.reg-toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: #ecd9ba;
+  background-image: 
+    linear-gradient(135deg, rgba(248, 235, 210, 0.95) 0%, rgba(228, 204, 168, 0.9) 100%),
+    url('assets/creased_parchment_bg.jpg');
+  border: 2px solid #842010;
+  border-radius: 8px;
+  padding: 14px 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  z-index: 30000;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 90vw;
+  text-align: center;
+}
+
+.reg-toast.active {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.reg-toast-title {
+  font-family: var(--font-letterpress);
+  font-size: 12px;
+  font-weight: 900;
+  color: #842010;
+  letter-spacing: 1.5px;
+  margin-bottom: 3px;
+}
+
+.reg-toast-desc {
+  font-family: var(--font-typewriter);
+  font-size: 12.5px;
+  color: #3b1f0c;
+  line-height: 1.4;
+}
+
+/* Mobile Adjustments for Dossier Posters & Buttons */
+@media (max-width: 768px) {
+  .dossier-card-poster-wrap {
+    height: 145px;
+  }
+  .modal-poster-img {
+    max-height: 230px;
+  }
+  .btn-dossier-register-grand {
+    padding: 11px 20px;
+  }
+  .register-label {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+  }
+  .btn-dossier-register {
+    padding: 6px 12px;
+    font-size: 10.5px;
+  }
+}
+
+
+
+/* Secondary View Details Button on Dossier Card */
+.btn-dossier-view {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(181, 128, 40, 0.15);
+  color: #522d14;
+  border: 1.5px solid #a87640;
+  border-radius: 4px;
+  padding: 6.5px 12px;
+  font-family: var(--font-letterpress);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.btn-dossier-view:hover {
+  background: rgba(132, 32, 16, 0.12);
+  border-color: #842010;
+  color: #842010;
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 10px rgba(132, 32, 16, 0.2);
+}
+
+.btn-dossier-view:active {
+  transform: translateY(1px);
+}
+
+.btn-dossier-view .cue-icon-scroll {
+  font-size: 12px;
+}
+

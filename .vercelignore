@@ -1,0 +1,17 @@
+# Raw uncompressed development frames and archives (site uses *_opt folders)
+*.zip
+cloudflared.exe
+rose_frames/
+initial_pos_frames/
+rose_rotating_frames/
+extracted_frames/
+rose rotating.mp4
+INITIAL POSITION.mp4
+assets/landing_video_original_backup.mp4
+
+# Backups and temporary test scripts
+*.bak
+test_*
+*.mp4.bak
+__pycache__/
+*.pyc
