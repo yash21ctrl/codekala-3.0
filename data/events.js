@@ -1,7 +1,7 @@
 /**
  * CODEKALA 3.0 Event Registry & Data
- * Presented by ADROIT CCSD
- * Date: November 13, 2026
+ * Presented by ADROIT CSD
+ * Date: November 14, 2026
  * 
  * Events:
  * TECHNICAL:
@@ -26,7 +26,7 @@ const EVENT_DATA = {
     subtitle: "Innovation, Project & Research Paper Presentation",
     category: "Technical",
     badge: "Paper & Prototype",
-    date: "NOV 13",
+    date: "NOV 14",
     time: "10:30 AM - 01:00 PM",
     venue: "Main Auditorium Seminar Hall 1",
     teamSize: "1 - 3 Members",
@@ -57,7 +57,7 @@ const EVENT_DATA = {
     subtitle: "The Premier Algorithmic Coding Duel",
     category: "Technical",
     badge: "Speed DSA Duel",
-    date: "NOV 13",
+    date: "NOV 14",
     time: "09:30 AM - 12:30 PM",
     venue: "Turing Computing Lab, Block A",
     teamSize: "1 - 2 Members",
@@ -88,7 +88,7 @@ const EVENT_DATA = {
     subtitle: "Next-Gen UI/UX & Creative Frontend Craft Duel",
     category: "Technical",
     badge: "Frontend & UI/UX",
-    date: "NOV 13",
+    date: "NOV 14",
     time: "01:30 PM - 04:00 PM",
     venue: "Multimedia & Design Studio, 3rd Floor",
     teamSize: "1 - 2 Members",
@@ -121,7 +121,7 @@ const EVENT_DATA = {
     subtitle: "Tactical Mobile Showdown: BGMI & Free Fire MAX",
     category: "Non-Technical",
     badge: "BGMI & Free Fire",
-    date: "NOV 13",
+    date: "NOV 14",
     time: "10:30 AM - 03:30 PM",
     venue: "Gamer's Pavilion, Hall 2",
     teamSize: "Squad (4 Players + 1 Sub)",
@@ -151,7 +151,7 @@ const EVENT_DATA = {
     subtitle: "Rapid Blitz Chess & Tactical Mind Warfare",
     category: "Non-Technical",
     badge: "Blitz Chess Arena",
-    date: "NOV 13",
+    date: "NOV 14",
     time: "10:00 AM - 01:00 PM",
     venue: "Quiet Hall, Central Library",
     teamSize: "Individual",
@@ -181,7 +181,7 @@ const EVENT_DATA = {
     subtitle: "Campus-Wide Cryptic Mystery & Geocache Treasure Quest",
     category: "Non-Technical",
     badge: "Mystery Treasure Hunt",
-    date: "NOV 13",
+    date: "NOV 14",
     time: "02:00 PM - 04:30 PM",
     venue: "Campus Grounds & Quadrangles",
     teamSize: "3 - 4 Members",

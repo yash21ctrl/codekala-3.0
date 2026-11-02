@@ -113,7 +113,7 @@ function initApplication() {
   const audioToggle = document.getElementById('audioToggle');
   const musicWaves = document.getElementById('musicWaves');
 
-  // Countdown Elements (November 13, 2026)
+  // Countdown Elements (November 14, 2026)
   const timerDays = document.getElementById('timerDays');
   const timerHours = document.getElementById('timerHours');
   const timerMinutes = document.getElementById('timerMinutes');
@@ -164,10 +164,10 @@ function initApplication() {
   window.addEventListener('scroll', updateScrollVolume, { passive: true });
 
   // ==========================================================================
-  // COUNTDOWN TIMER ENGINE (Target: November 13, 2026 00:00:00)
-  // Safely clamped to 00:00:00:00 on/after November 13th without any error
+  // COUNTDOWN TIMER ENGINE (Target: November 14, 2026 00:00:00)
+  // Safely clamped to 00:00:00:00 on/after November 14th without any error
   // ==========================================================================
-  const targetDate = new Date(2026, 10, 13, 0, 0, 0).getTime(); // Month 10 = November
+  const targetDate = new Date(2026, 10, 14, 0, 0, 0).getTime(); // Month 10 = November
 
   function updateCountdown() {
     const now = Date.now();
