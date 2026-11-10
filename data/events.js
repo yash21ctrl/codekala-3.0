@@ -154,7 +154,7 @@ const EVENT_DATA = {
     date: "NOV 14",
     time: "10:00 AM - 01:00 PM",
     venue: "Quiet Hall, Central Library",
-    teamSize: "Individual",
+    teamSize: "Team of 3",
     prizePool: "₹10,000",
     firstPrize: "₹6,500",
     secondPrize: "₹3,500",

@@ -755,7 +755,7 @@ function initApplication() {
       'assets/events/algo_x.jpg?v=15.0',
       'assets/events/free_fire.jpg?v=15.0',
       'assets/events/bgmi.jpg?v=15.0',
-      'assets/events/chaos_league.jpg?v=15.0',
+      'assets/events/chaos_league.jpg?v=16.0',
       'assets/events/clue_crew.jpg?v=15.0'
     ];
     posters.forEach(src => {
@@ -880,9 +880,9 @@ The best algorithm doesn’t just work, it wins. Solutions are scored automatica
     'chaos-league': {
       title: 'CHAOS LEAGUE',
       track: 'NON-TECHNICAL CONCLAVE // TRACK 03',
-      image: 'assets/events/chaos_league.jpg',
+      image: 'assets/events/chaos_league.jpg?v=16.0',
       registerUrl: REGISTER_FORM_URL,
-      description: `Chaos League is an exciting team-based game where four members come together to challenge their teamwork and abilities. It takes trust, coordination, smart thinking, and quick decision-making to overcome unexpected challenges. Work together, think creatively, and act fast to stay ahead of the chaos. Remember, victory isn't just about individual skills but how well your team plays together!`,
+      description: `Chaos League is an exciting team-based game where three members come together to challenge their teamwork and abilities. It takes trust, coordination, smart thinking, and quick decision-making to overcome unexpected challenges. Work together, think creatively, and act fast to stay ahead of the chaos. Remember, victory isn't just about individual skills but how well your team plays together!`,
       rules: ''
     },
     'clue-crew': {
@@ -946,7 +946,7 @@ Team Formation
     }
 
     if (modalEventPoster) {
-      modalEventPoster.src = data.image + '?v=' + Date.now();
+      modalEventPoster.src = (data.image ? data.image.split('?')[0] : '') + '?v=' + Date.now();
       modalEventPoster.alt = `${data.title} Official Poster`;
     }
 
